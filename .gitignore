@@ -1,0 +1,15 @@
+/figures/*
+!/figures/
+!/figures/.gitkeep
+
+/figures/example_figure_subdir/*
+!/figures/example_figure_subdir/*
+!/figures/example_figure_subdir/.gitkeep
+
+slides/slides.bbl
+slides/slides.log
+slides/slides.blg
+slides/slides.aux
+slides/acs-slides.bib
+
+*.swp
