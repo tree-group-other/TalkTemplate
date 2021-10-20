@@ -7,27 +7,62 @@
 \usepackage{adjustbox}
 \usepackage{lipsum}
 \usepackage{pdfpages}
+\usepackage{hyperref} % for hyperlinks
+\usepackage{ulem} % for underline, etc.
 
-%% ----- global variables and routines -----
+% ----- beamer settings -----
 % {{{
-% define some colors to highlight equations
-\definecolor{eqcol1}{HTML}{FFA02B}
-\definecolor{eqcol2}{HTML}{FFD621}
-\definecolor{eqcol3}{HTML}{FF632F}
-\definecolor{titlecol1}{HTML}{0B61A4}
-\definecolor{titlecol2}{HTML}{3F92D2}
-\definecolor{titlecol3}{HTML}{66A3D2}
 
-%\definecolor{lightblue}{rgb}{0.75,0.75,1.0}
-%\definecolor{darkblue}{rgb}{0.125,0.125,0.5}
+% define some colors/shades
 \definecolor{lightblue}{HTML}{66A3D2}
 \definecolor{darkblue}{HTML}{0B61A4}
 \definecolor{lightorange}{HTML}{FF8E0B}
 \definecolor{darkorange}{HTML}{D45500}
 \definecolor{paleorange}{HTML}{FFDEB3}
 
-% for putting things exactly where I want them
-\def\Put(#1,#2)#3{\leavevmode\makebox(0,0){ \put(#1,#2){#3} }}
+% set color for hyperlinks
+\hypersetup{colorlinks, linkcolor=darkgray, citecolor=darkgray, urlcolor=darkgray}
+
+% set theme
+\usetheme{boxes}
+\usefonttheme[onlymath]{serif}
+
+% set beamer theme colors, etc.
+\setbeamercolor{frametitle}{fg=black}
+
+% customize blocks
+\setbeamertemplate{blocks}[rounded][shadow=false]
+\setbeamercolor{block title}{fg=white, bg=darkblue}
+\setbeamercolor{block body}{fg=black, bg=lightblue}
+
+% customize enumerate and item, including color and spacing
+\setbeamercolor*{item}{fg=darkblue}
+\setbeamercolor*{enumerate item}{fg=black}
+\setbeamercolor*{enumerate subitem}{fg=black}
+\setbeamercolor*{enumerate subsubitem}{fg=black}
+\setbeamertemplate{itemize subitem}{$-$}
+\setlength{\leftmarginii}{10pt}
+\newlength\origleftmargini
+\setlength\origleftmargini\leftmargini
+
+% customize footer
+\setbeamercolor{footline}{fg=gray}
+\setbeamertemplate{navigation symbols}{} % get rid of navigation bar
+
+% add page numbers to footer
+\makeatletter
+\setbeamertemplate{footline}{
+    \leavevmode%
+    \hbox{%
+    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,left,leftskip=1ex]{}
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,right,rightskip=2ex]{}
+      \insertframenumber % page number only
+      % \insertframenumber/\inserttotalframenumber % page number/total pages
+    \end{beamercolorbox}
+    }\vskip0pt
+}
+\makeatother
 % }}}
 
 % ----- tikz ----- (for drawing)
@@ -55,58 +90,7 @@
 
 % }}}
 
-% ----- beamer settings -----
-% {{{
-% note: default frame size: 12.8cm x 9.6cm
-
-% set theme
-\usetheme{boxes} %\mode<presentation>{ \usetheme{boxes} }
-\usefonttheme[onlymath]{serif}
-
-% set beamer theme colors, etc.
-%\setbeamercolor{title}{fg=white}
-\setbeamercolor{frametitle}{fg=black}
-%\setbeamercolor{structure}{fg=green}
-\setbeamertemplate{blocks}[rounded][shadow=false]
-\setbeamercolor{block title}{fg=white, bg=darkblue}
-\setbeamercolor{block body}{fg=black, bg=lightblue}
-%\setbeamercolor{itemize item}{fg=darkblue}
-\setbeamercolor*{item}{fg=darkblue}
-\setbeamercolor{footline}{fg=gray}
-%\setbeamersize{text margin left=1.2em} % align text with frametitle
-%\setbeamersize{text margin right=1.2em} % make symmetric
-%\addtobeamertemplate{frametitle}{\vskip0.5em}
-\setbeamercolor*{enumerate item}{fg=black}
-\setbeamercolor*{enumerate subitem}{fg=black}
-\setbeamercolor*{enumerate subsubitem}{fg=black}
-% for itemize: sub-bullet and indent
-\setbeamertemplate{itemize subitem}{$-$}
-%\setlength{\leftmargini}{10pt}
-\setlength{\leftmarginii}{10pt}
-\newlength\origleftmargini
-\setlength\origleftmargini\leftmargini
-
-% customize footer
-\setbeamertemplate{navigation symbols}{} % get rid of navigation bar
-%\setbeamertemplate{footline}[frame number] % add page numbers only
-
-% add page numbers and Dow confidentiality statement
-\makeatletter
-\setbeamertemplate{footline}{
-    \leavevmode%
-    \hbox{%
-    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,left,leftskip=1ex]{}
-      %Confidential under Dow agreement \#235199AD
-    \end{beamercolorbox}
-    \begin{beamercolorbox}[wd=0.5\paperwidth,ht=2.25ex,dp=1ex,right,rightskip=2ex]{}
-      \insertframenumber%/\inserttotalframenumber
-    \end{beamercolorbox}
-    }\vskip0pt
-}
-\makeatother
-% }}}
-
-% --- how to include movies ---
+% --- Notes on options for including movies ---
 % {{{
 
 % (1) movie15 package
@@ -157,7 +141,7 @@
 
 % }}}
 
-% ----- custom definitions ----
+% ----- tips/tricks & custom definitions ----
 % {{{
 
 %% ** block title without a block **
@@ -196,12 +180,15 @@
 
 % }}}
 
-% customize title page
+% custom title page
 % {{{
 \setbeamerfont{author}{size=\normalsize} % font sizes
 \newcommand{\location}[1]{\def\insertlocation{#1}}
 \newcommand{\titlecolor}{\color{white}}
 \newcommand{\bottomcolor}{\color{white}}
+% https://tex.stackexchange.com/questions/350511/latex-beamer-create-own-variable
+\newcommand\insertpresenter{}
+\newcommand\presenter[1]{\renewcommand\insertpresenter{ \uline{#1}} }
 
 \defbeamertemplate*{title page}{customized}[1][]
 {
@@ -237,7 +224,7 @@
         }
         \vspace{12pt}
         {
-          \Large \bottomcolor{}\insertauthor \par
+          \Large \bottomcolor{}\insertpresenter, \insertauthor \par
         } 
         \vspace{8pt}
         { 
@@ -268,577 +255,274 @@
 }
 % }}}
 
-
 % ----- title/author info -----
-\title{Nonsolvent Induced Phase Separation\\ in Polymer Droplets}
-\author{\emph{Douglas R. Tree}, Rami Alhasan, Dakota Banks, Sion Jung, and Tanner Wilcoxson}
+\title{Talk Title\\A second line}
+\presenter{Speaker Name (underlined)}
+% for other authors
+\author{Contributing Author1, and Contributing Author2}
 \institute{Brigham Young University}
-\location{Virtual APS March Meeting}
-\date{March 17, 2021}
+\location{Meeting Name}
+\date{Month DD, YYYY}
 
 \begin{document}
 
 \begin{frame}[plain]
+  % customize title page using the template in the preamble
   \titlepage
 \end{frame}
 
-\begin{frame}{Making complex polymer nanoparticles at scale is important but challenging.}
+\begin{frame}[c]{Simple Slide with a Block}
 % {{{
 
-\begin{columns}[T]
-
-\column{0.45\textwidth}
-
-  \centering
-  \blocktitle{Types of PNPs}
-
-  \begin{tikzpicture}
-
-    \node[text width=6cm, align=center, inner sep=0pt]  (Lee2017) {
-      \includegraphics[width=\textwidth]{figs/Lee2017_Fig1_cropped.pdf}
-    };
-
-    \node[text width=3.4cm, align=center, below left =0.01 and 0.03 of Lee2017.south west, anchor=north west, inner sep=0pt]  (Udoh2016) {
-      \includegraphics[width=\textwidth]{figs/Udoh2016_Fig6_cropped.pdf}
-    };
-
-    \node[text width=2.6cm, align=center, right=0.02 of Udoh2016, inner sep=0pt]  (Sosa2016) {
-      \includegraphics[width=\textwidth]{figs/Sosa2016_Fig3_cropped.pdf}
-    };
-
-    \node[text width=6.5cm, align=left, below= 0.1 of Udoh2016.south west, anchor=north west, inner sep=0pt]  (attributes) {
-      Size, Shape, Porosity, Microstructure, Anisotropy, Patches, Polydispersity, \ldots
-    };
-
-
-  \end{tikzpicture}
-
-\column{0.48\textwidth}
+  % [c] vertically centers your content
+  % [t] will top align the content
 
   \centering
   \vspace{-0.5\baselineskip}
-  \begin{block}{Applications for PNPs}
+  \begin{block}{Example Block}
     \begin{itemize} 
-    \item Drug delivery
-    \item Surfactants in emulsions \& bijels
-    \item Sensors \& responsive coatings
-    \item Active materials/swimmers
-    \item Self-assembled metamaterials
+    \item This is like Powerpoint
+    \item Isn't it a terrible slide?
+    \item \href{https://www.overleaf.com/learn/latex/Beamer\_Presentations\%3A\_A\_Tutorial\_for\_Beginners\_(Part\_1)\%E2\%80\%94Getting\_Started}{Here} is a link to a Beamer tutorial by Overleaf. 
+It gives some good basics.
   \end{itemize}
   \end{block}
 
-  \vspace{6pt}
-  \makebox[\textwidth][c]{
-  \begin{tikzpicture}
-    \node[text width=1.03\textwidth, align=center, draw=orange, fill=paleorange,
-          rectangle, rounded corners, thick, inner sep=4pt] {
-    \emph{Challenge: How create particles with well-controlled structure in large quantities?}
-    };
-  \end{tikzpicture}
-  }
-  \par
-  \vspace{6pt}
-
-  {
-    \scriptsize 
-    Du and O'Reilly. Chem.~Soc.~Rev. 40, 2402, (2011)\par
-    Sosa et al. Macromolecules. 49, 3580 (2016)\par
-    Udoh et al. Langmuir. 32, 8131 (2016)\par
-    Lee et al. Adv.~Materials. 29, 1076008 (2017)\par
-  }
-
-\end{columns}
-
-% }}}
+%% }}}
 \end{frame}
 
-\begin{frame}{Solvent/nonsolvent exchange processes are scalable ways to create microstructure.}
-% {{{
-
-\begin{columns}[T]
-
-\column{0.50\textwidth}
-
-  \centering
-  \blocktitle{Porous Membranes are made by\\Nonsolvent Induced Phase Separation}
-  \vspace{3pt}
-
-  \begin{tikzpicture}
-
-    \begin{pgfonlayer}{bg}
-    \node[inner sep=0pt, text width=\textwidth] (rollers) {
-      \includegraphics[width=\textwidth]{figs/immersion_precipitation_roll.pdf}
-    };
-    \end{pgfonlayer}
-
-    \begin{pgfonlayer}{main}
-    \node[inner sep=2pt, text width=0.4\textwidth, fill=white, rectangle, rounded corners, draw=black,
-          above right = 0.8cm and -0.1 cm of rollers.north west, anchor=north west ] (ternary) {
-      \includegraphics[width=\textwidth]{figs/ternary_phase_diagram_schematic.pdf}
-    };
-
-    \node[inner sep=2pt, text width=0.4\textwidth, fill=white, rectangle, rounded corners, draw=black,
-          above left = -0.3cm and -0.5 cm of rollers.south east, anchor=south east] (microstructure) {
-      \includegraphics[width=\textwidth]{figs/Saedi2014_fig6b.pdf} \\
-    };
-
-    \end{pgfonlayer}
-
-  \end{tikzpicture}
-  {\scriptsize Saedi et al. Can.~J.~Chem.~Eng. (2014) \par}
-
-\column{0.45\textwidth}
-
-  \centering
-  \vspace{-0.5\baselineskip}
-  \begin{block}{Solvent exchange processes for making particles}
-    \begin{itemize}
-      \item Flash nanoprecipitation
-      \item Microfluidic solvent extraction
-      \item ``Water addition''
-      \item Interfacial instability
-    \end{itemize}
-  \end{block}
-
-  \vspace{6pt}
-  \makebox[\textwidth][c]{
-  \begin{tikzpicture}
-    \node[text width=1.0\textwidth, align=center, draw=orange, fill=paleorange,
-          rectangle, rounded corners, thick, inner sep=4pt] {
-    \emph{These processes are nonequilibrium!}\\[3pt]
-    Opportunity to design processes to achieve desired microstructures.
-    };
-  \end{tikzpicture}
-  }
-  \par
-  \vspace{6pt}
-
-  {\scriptsize{}
-  Ho Lee et al. J.~Colloid~Int.~Sci. 586, 445 (2021).\par
-  Sosa et al. Macromolecules. 49, 3580 (2016).\par
-  Udoh et al. Langmuir. 32, 8131 (2016).\par
-  Zhu \& Hayward. Angew.~Chem. 47, 2113 (2008).\par
-  }
-
-
-\end{columns}
-
-\begin{tikzpicture}[remember picture, overlay]
-  \node[text width=\textwidth, align=center, anchor=south] at (current page.south) {
-  };
-\end{tikzpicture}
-
-% }}}
-\end{frame}
-
-\begin{frame}[t]{Creating a model for microstructure formation during solvent exchange}
+\begin{frame}{Two Columns with Blocks}
 % {{{
 
   \begin{columns}[T]
 
-    \column{0.49\textwidth}
+  \column{0.45\textwidth}
 
-      \centering
-      \vspace{-0.5\baselineskip}
-      \begin{block}{Challenges}
-        \begin{itemize}
-          \item Spatially inhomogeneous/multi-phase
-          \item Multiple transport modes: mass \& momentum 
-          \item Separation of scales: interfaces, microstructure, \& geometry
-        \end{itemize}
-      \end{block}
+    \centering
+    \vspace{-0.5\baselineskip}
+    \begin{block}{Example Block with Items}
+      \begin{itemize} 
+      \item At least this slide has an image!
+      \item Item 2
+      \item Item 3
+      \item Item 4
+    \end{itemize}
+    \end{block}
 
-      \vspace{6pt}
-      \includegraphics[width=\textwidth, trim=0 23 0 0, clip]{figs/Sharrat2018_fig10.pdf}\par%
-      \vspace{6pt}
-      {\scriptsize Sharrat, Cabral, et al.\ Soft Matter.\ 2018\par}
-          
-    \column{0.46\textwidth}
+  \column{0.45\textwidth}
 
-      \centering
-      \vspace{-0.5\baselineskip}
-      \begin{block}{A Powerful Approach:\\Continuum Fluids + Classical DFT}
-          \begin{itemize}
-            \item Well-developed methods
-            \item Rigorous connection to stat mech
-            \item Continuous/diffuse interfaces
-          \end{itemize}
-      \end{block}
+    \centering
+    \blocktitle{Block Title Only}
+    \includegraphics[width=\textwidth]{figs/fig-placeholder.pdf}
 
-      \vspace{6pt}
-      \includegraphics[width=\textwidth, trim=0 0 0 1, clip]{figs/Hall2006_Fig2.pdf}\par
-      \vspace{6pt}
-      {\scriptsize Fredrickson.\ J.\ Chem.\ Phys.\ (2002) \par
-      Hall et al.\ Phys.\ Rev.\ Lett.\ (2006) \par
-      M{\"u}ller and de Pablo. Ann.\ Rev.\ Mater. Res.\ (2013)\par
-      }
-
-    \vspace{6pt}
-    \makebox[\textwidth][c]{
-    \begin{tikzpicture}
-      \node[text width=1.0\textwidth, align=center, draw=orange, fill=paleorange,
-            rectangle, rounded corners, thick, inner sep=4pt] {
-      \emph{This talk: Focus on porous microparticles only}
-      };
-    \end{tikzpicture}
+    {
+      \scriptsize 
+      Example citation.\par
+      Sosa et al. Macromolecules. 49, 3580 (2016)\par
+      You need a par after it to get the text size and spacing to change properly.\par
     }
-    \par
 
   \end{columns}
 
-% }}}
+%% }}}
 \end{frame}
 
-\begin{frame}[t]{A field theory model of transport and phase separation}
+\begin{frame}{Successively adding material to a slide}
 % {{{
+
+  \begin{block}{Using Overlay Specs}
+  
+  This is called ``Overlay'' in Beamer.
+  There are different ways to do this. 
+  I give just a few examples.
+  See \href{https://www.overleaf.com/learn/latex/Beamer\_Presentations\%3A\_A\_Tutorial\_for\_Beginners\_(Part\_4)\%E2\%80\%94Overlay\_Specifications}{this link} for more.
+  Note that the slide number doesn't change.
+  \end{block}
+  
 
   \begin{columns}[T]
 
-    \column{0.42\textwidth}
+  \column{0.45\textwidth}
 
-      \centering
+    \centering
+    \vspace{-0.5\baselineskip}
+    \begin{block}{Example Block with Items}
+      \begin{itemize} 
+      \item<1-> Item 1
+      \item<2,4> Item 2
+      \item<3> Item 3
+      \item<4-> Item 4
+    \end{itemize}
+    \end{block}
 
-      \blocktitle{A two-fluid model}
+  \column{0.45\textwidth}
 
-      \vspace{4pt}
-      \includegraphics[width=0.7\textwidth]{figs/two_fluid.pdf}
-      \vspace{4pt}
-
-      \begin{tikzpicture}
-
-        \node[fill=eqcol1,rounded corners,anchor=base] (m1) {
-          $\displaystyle \dot{F}[\{ \bm{v}_i\}]$
-        };
-
-        \node[below=0.1 of m1] (l1) {free energy};
-    
-        \node[fill=eqcol2!80,rounded corners,anchor=base, right=0.4 of m1] (m2) {
-          $\displaystyle \Phi[\{\bm{v}_i\}]$\vphantom{$\dot{F}$}
-        };
-
-        \node[below=0.1 of m2] (l2) {dissipation};
-
-        \node[fill=eqcol3,rounded corners,anchor=base, right=0.4 of m2] (m3) {
-          $\displaystyle \lambda G[\{\bm{v}_{i}\}]$\vphantom{$\dot{F}$}
-        };
-
-        \node[below=0.1 of m3] (l3) {constraints};
-
-        \node[below=0.2 of l2, align=center, text width=\textwidth, 
-              draw=darkblue, rounded corners, thick] (numerical) {
-          Solve on GPUs using pseudospectral method
-        };
-
-      \end{tikzpicture}
-
-
-    \column{0.55\textwidth}
-
-      \centering
-
-      \tikz{\node[draw=black, rounded corners, align=center]{ 
-         Convection-Diffusion Equation}; 
-      }
-
-      \vspace{-18pt}
-      \begin{gather*}
-      \frac{\partial \phi_{i}}{\partial t} + \bm{v} \cdot \nabla \phi_{i}  = \
-             \nabla \cdot \left ( \sum_{j} M_{ij}(\phi_{i}) \nabla \mu_{j} \right ) \\
-        \mu_{i} = \frac{\delta F[\phi_{i}]}{\delta \phi_{i}}, \,
-          F = \int d\bm{r} \left [ f(\phi_{i}) + 
-              \frac{1}{2} \sum_{i} \kappa_{i} \left | \nabla \phi_{i} \right | ^{2} \right ]
-      \end{gather*} \par
-
-      \tikz{\node[draw=black, rounded corners, align=center]{ 
-        Incompressible Stokes Equation}; 
-      }
-      \begin{gather*}
-        0 = -\nabla p + \nabla \cdot \left [ \eta(\phi_{i}) (\nabla \bm{v} + \nabla \bm{v}^{T}) \right ] \
-            - \nabla \cdot \bm{\Pi} \\[3pt]
-        0 = \nabla \cdot \bm{v}
-      \end{gather*} \par
-
-      \makebox[\textwidth][c]{\small Tree et al.\ Soft Matter.\ 13, 3013--3030 (2017)}
-
-    \end{columns}
-
-% }}}
-\end{frame}
-
-\begin{frame}[t]{A typical simulation of a phase separating polymer droplet}
-% {{{
-
-  \centering
-  \begin{tikzpicture}[remember picture, overlay]
-    \node[inner sep=0pt, align=center, anchor=center] (video) at ([yshift=1cm] current page.center) 
-    {
-      \movie[width=\textwidth, poster, autostart, loop] { %showcontrols
-        \includegraphics[width=\textwidth]{figs/animate-circle-frame0.png}}
-        {figs/animate-circle.avi}
-    };
-
-    \node[align=center, text width=0.4\textwidth, below right = -0.15 and 2 of video.south west, anchor=north west] (annote)
-    {
-      \begin{itemize}
-      \item Ternary polymer solution
-      \begin{itemize}
-        \item dope: $\phi_{p} = 0.3$, $\phi_{n} = 0.6$
-        \item bath: $\phi_{n} = 0.98$ 
-      \end{itemize}
-      \item Initiated inside spinodal for ease of visualization
-      \end{itemize}
-    };
-
-    \node[align=center, text width=0.3\textwidth, above right=0.5 and 0. of annote.north east, anchor=north west] (phasediag)
-    {
-      \includegraphics[width=\textwidth]{figs/fig-OnePhaseDiagram.pdf}
-    };
-
-  \end{tikzpicture}
-
-% }}}
-\end{frame}
-
-\begin{frame}<1-2>[t]{What is the effect of the concentration of polymer in the droplet?}
-% {{{
-
-  \centering
-  \begin{tikzpicture}
-
-    \node[align=center, text width=0.40\textwidth] (phase-diag)
-    {
-      \begin{overlayarea}{\textwidth}{\textheight}
-      \only<1>{
-        \includegraphics[width=\textwidth]{figs/fig-phase_diagram_SSL.pdf}
-      }
-      \only<2>{
-        \includegraphics[width=\textwidth]{figs/fig-MorphologyDiagram_16.pdf}
-      }
-      \end{overlayarea}
-    };
-
-    \node[align=center, text width=0.22\textwidth, below left = 1.5 and 5.0 of phase-diag.north, anchor=north] (phi1-25)
-    {
-      \includegraphics[width=\textwidth, trim=55 50 50 50, clip]{figs/fig-Droplet_Morph_2.pdf}
-    };
-
-    \node[align=center, text width=0.22\textwidth, below left = 4.4 and 1.0 of phase-diag.north, anchor=north] (phi1-18)
-    {
-      \includegraphics[width=\textwidth, trim=70 60 60 60, clip]{figs/fig-Droplet_Morph_1.pdf}
-    };
-
-    \node[align=center, text width=0.22\textwidth, below right= 1.5 and 4.8 of phase-diag.north, anchor=north] (phi1-12)
-    {
-      \includegraphics[width=\textwidth, trim=80 70 70 70, clip]{figs/fig-Droplet_Morph_0.pdf}
-    };
-
-    \node[below right = 3.75 and 0.55 of phase-diag.north, anchor=center] (hidot) {};
-    \node[below right = 3.70 and 1.05 of phase-diag.north, anchor=center] (meddot) {};
-    \node[below right = 3.75 and 1.50 of phase-diag.north, anchor=center] (lowdot) {};
-
-    \draw[->, thick, gray] (phi1-25) edge (hidot);
-    \draw[->, thick, gray] (phi1-18) edge (meddot);
-    \draw[->, thick, gray] (phi1-12) edge (lowdot);
-
-    \node[align=center, text width=0.35\textwidth, below left =-0.18 and 0.10 of phi1-25.south, anchor=north] (comment1)
-    {
-      {\scriptsize Majority polymer phase with solvent droplets\par}
-    };
-
-    \node[align=center, text width=0.35\textwidth, below left =-0.18 and 0.06 of phi1-12.south, anchor=north] (comment2)
-    {
-      {\scriptsize Majority solvent phase with polymer droplets\par}
-    };
-
-    \node[align=center, text width=0.15\textwidth, above right = 0.10 and 0. of phi1-18.south east, anchor=south west] (comment2)
-    {
-      {\scriptsize \raggedright Nearly bicontinuous \par}
-    };
+    \centering
+    \vspace{-0.5\baselineskip}
   
-  \end{tikzpicture}
-
-% }}}
-\end{frame}
-
-\begin{frame}<1-3>[t]{What is the effect of solvent/nonsolvent miscibility?}
-% {{{
-
-  \centering
-  \begin{tikzpicture}
-
-    \node[align=center, text width=0.40\textwidth] (phase-diag)
-    {
-      \begin{overlayarea}{\textwidth}{\textheight}
-      \only<1>{
-        \includegraphics[width=\textwidth]{figs/fig-MorphologyDiagram_16.pdf}
-      }
-      \only<2>{
-        \includegraphics[width=\textwidth]{figs/fig-MorphologyDiagram_20.pdf}
-      }
-      \only<3>{
-        \includegraphics[width=\textwidth]{figs/fig-MorphologyDiagram_21.pdf}
-      }
-      \end{overlayarea}
-    };
-
-    \node[align=center, text width=0.22\textwidth, below left = 1.5 and 5.0 of phase-diag.north, anchor=north] (phi1-25)
-    {
-      \includegraphics[width=\textwidth, trim=55 50 50 50, clip]{figs/fig-Droplet_Morph_2.pdf}
-    };
-
-    \node[align=center, text width=0.22\textwidth, below left = 4.4 and 1.0 of phase-diag.north, anchor=north] (phi1-18)
-    {
-      \includegraphics[width=\textwidth, trim=70 60 60 60, clip]{figs/fig-Droplet_Morph_1.pdf}
-    };
-
-    \node[align=center, text width=0.22\textwidth, below right= 1.5 and 4.8 of phase-diag.north, anchor=north] (phi1-12)
-    {
-      \includegraphics[width=\textwidth, trim=80 70 70 70, clip]{figs/fig-Droplet_Morph_0.pdf}
-    };
-
-    \node[below right = 3.75 and 0.55 of phase-diag.north, anchor=center] (hidot) {};
-    \node[below right = 3.70 and 1.05 of phase-diag.north, anchor=center] (meddot) {};
-    \node[below right = 3.75 and 1.50 of phase-diag.north, anchor=center] (lowdot) {};
-
-    \draw[->, thick, gray] (phi1-25) edge (hidot);
-    \draw[->, thick, gray] (phi1-18) edge (meddot);
-    \draw[->, thick, gray] (phi1-12) edge (lowdot);
-
-    \node[align=center, text width=0.35\textwidth, below left =-0.18 and 0.10 of phi1-25.south, anchor=north] (comment1)
-    {
-      {\scriptsize Majority polymer phase with solvent droplets\par}
-    };
-
-    \node[align=center, text width=0.35\textwidth, below left =-0.18 and 0.06 of phi1-12.south, anchor=north] (comment2)
-    {
-      {\scriptsize Majority solvent phase with polymer droplets\par}
-    };
-
-    \node[align=center, text width=0.15\textwidth, above right = 0.10 and 0. of phi1-18.south east, anchor=south west] (comment2)
-    {
-      {\scriptsize \raggedright Nearly bicontinuous \par}
-    };
-  
-  \end{tikzpicture}
-
-
-% }}}
-\end{frame}
-
-\begin{frame}[c]{What is the effect of droplet size?}
-%{{{
-
-\begin{center}
-\begin{tikzpicture}
-  
-  \node[align=center, text width=6.5cm] (circle) {
-    \movie[width=\textwidth, poster, autostart, loop] %showcontrols
-      {\includegraphics[width=\textwidth]{figs/circle_2-5-3_cropped_frame00000.png}}
-      {figs/circle_2-5-3_cropped.mp4}
-  };
-
-  \node[align=center, text width=6.5cm, right= 0.2 of circle] (bigcircle) {
-    \movie[width=\textwidth, poster, autostart, loop]
-      {\includegraphics[width=\textwidth]{figs/bigcircle_2-5-3_cropped_frame00000.png}}
-      {figs/bigcircle_2-5-3_cropped.mp4}
-  };
-
-  \node[align=center, text width=6.5cm, above= 0 of circle.south, anchor=north] (circle-txt) {
-    Small Droplet
-  };
-
-  \node[align=center, text width=6.5cm, above= 0 of bigcircle.south, anchor=north] (bigcircle-txt) {
-    Big Droplet
-  };
-
-\end{tikzpicture}
-\end{center}
-
-% }}}
-\end{frame}
-
-\begin{frame}[c]{What is the effect of droplet shape?}
-%{{{
-
-\begin{center}
-\begin{tikzpicture}
-  
-  \node[align=center, text width=6.5cm] (circle) {
-    \movie[width=\textwidth, poster, autostart, loop] %showcontrols
-      {\includegraphics[width=\textwidth]{figs/circle_2-5-3_cropped_frame00000.png}}
-      {figs/circle_2-5-3_cropped.mp4}
-  };
-
-  \node[align=center, text width=6.5cm, right= 0.2 of circle] (square) {
-    \movie[width=\textwidth, poster, autostart, loop]
-      {\includegraphics[width=\textwidth]{figs/square_2-5-3_cropped_frame00000.png}}
-      {figs/square_2-5-3_cropped.mp4}
-  };
-
-  \node[align=center, text width=6.5cm, below= 0 of circle.south, anchor=north] (circle-txt) {
-    Circular Droplet
-  };
-
-  \node[align=center, text width=6.5cm, above= 0 of square.south, anchor=north] (square-txt) {
-    Square ``Droplet''
-  };
-
-\end{tikzpicture}
-\end{center}
-
-% }}}
-\end{frame}
-
-\begin{frame}[c]{Summary and conclusions}
-%% {{{
-
-  \vspace{0.5cm}
-  \centering
-  \makebox[\textwidth][c]{
-  \begin{tikzpicture}
-    
-      \node[align=center, text width=3.75cm] (text1) {%
-        \textbf{Concentration}\\The sequence of morphologies is robust, even with finite nonsolvent miscibility.
-      };
-
-      \node[align=center, text width=5.5cm, right=0.15 of text1] (compspace) {%
-        \includegraphics[height=2.1cm, trim=55 50 50 50, clip]{figs/fig-Droplet_Morph_2.pdf}\hspace{2pt}%
-        \includegraphics[height=2.1cm, trim=70 60 60 60, clip]{figs/fig-Droplet_Morph_1.pdf}\hspace{2pt}%
-        \includegraphics[height=2.1cm, trim=81 70 70 70, clip]{figs/fig-Droplet_Morph_0.pdf}
-      };
-
-      \node[align=center, text width=3.35cm, below=1.25cm of text1] (text2) {%
-        \textbf{Size and Shape}\\Play a role in determining morphology.
-      };
-
-      \node[align=center, text width=6.5cm, right=0.15 of text2] (morphology) {%
-        \includegraphics[height=1.90cm, trim=125 120 110 120, clip]{figs/circle_2-5-3_cropped_00039.png}\hspace{2pt}%
-        \includegraphics[height=1.90cm, trim=125 120 110 120, clip]{figs/bigcircle_2-5-3_cropped_00246.png}\hspace{2pt}%
-        \includegraphics[height=1.90cm, trim=125 120 110 120, clip]{figs/square_2-5-3_cropped_00024.png}
-      };
-
-      \node[align=center, text width=4.0cm, below right=0cm and 0.5cm of compspace.north east, anchor=north west] (text3) {%
-        \movie[width=\textwidth, poster, autostart, loop]
-          {\includegraphics[width=\textwidth]{figs/eta500_cropped_frame00000.png}}
-          {figs/animate_eta500_cropped.mp4}
-      };
-
-      \node[align=center, text width=3.5cm, below=0. of text3.south, anchor=north, inner sep=0pt] (teaser) {
-        \textbf{Future}\\
-        How does this compare to experiments?\\
-        The model needs vitrification \ldots
-      };
-
-  \end{tikzpicture}
-  }
-
-  \begin{center}
-    {\small
-    Alhasan et al.\ In Preparation. 2021
+    \onslide<1->{
+    \begin{equation*}
+    a^{2} + b^{2} = c^{2}
+    \end{equation*}
     }
-  \end{center}
+
+    \only<2>{
+    \begin{equation*}
+    e^{-i \pi} = -1
+    \end{equation*}
+    }
+
+    \onslide<3>{
+    \begin{equation*}
+    \sin(x)^{2} + \cos(x)^{2} = 1
+    \end{equation*}
+    }
+
+  \end{columns}
 
 %% }}}
+\end{frame}
+
+\begin{frame}<1>[label=outline]{Repeating frames}
+% {{{
+
+  \begin{block}{Using Overlay Specs}
+  Sometimes you want to repeat a slide.
+  A label and the command \texttt{againframe} allows you to do this (even if the frames are not back-to-back).
+  \end{block}
+
+  \onslide<1->{
+  \begin{equation*}
+  a^{2} + b^{2} = c^{2}
+  \end{equation*}
+  }
+
+  \only<2>{
+  \begin{equation*}
+  e^{-i \pi} = -1
+  \end{equation*}
+  }
+
+  \onslide<3>{
+  \begin{equation*}
+  \sin(x)^{2} + \cos(x)^{2} = 1
+  \end{equation*}
+  }
+
+%% }}}
+\end{frame}
+
+\againframe<2>{outline}
+
+\begin{frame}{Relative Placement Using Tikz}
+% {{{
+
+  \begin{block}{Floating Picture with Relative Locations Inside}
+  Sometimes you want more control over placement than just columns.
+  Tikz is good at this.
+  This slides shows Tikz doing relative placement, but the overall TikzPicture is still placed by beamers algorithms to fit with your other content.
+  \end{block}
+
+  \begin{tikzpicture}
+
+    \node[text width=4cm, align=center, inner sep=0pt] (A) {
+      \includegraphics[width=\textwidth]{figs/fig-placeholder.pdf}
+    };
+
+    \node[text width=2cm, align=center, inner sep=0pt, right = 0.3 of A] (B) {
+      \includegraphics[width=\textwidth]{figs/TreeGroupLogo.pdf}
+    };
+
+    \node[text width=3cm, align=center, inner sep=0pt, right = 0.3 of B] (C) {
+      \includegraphics[width=\textwidth]{figs/BYU_IM22a.pdf}
+    };
+
+    \node[text width=6.5cm, align=left, inner sep=0pt, 
+          below right = 0.1 and 0.1 of A.south, anchor=north west, inner sep=0pt] (D) {
+      You can put text in these nodes too\ldots
+    };
+
+  \end{tikzpicture}
+
+  \begin{block}{Links to more details about relative positioning}
+    \begin{itemize}
+    \item \href{https://tex.stackexchange.com/questions/69439/how-can-i-achieve-relative-positioning-in-tikz}{Obligatory Stack Exchange Answer}
+    \item \href{https://www.bu.edu/math/files/2013/08/tikzpgfmanual.pdf}{Tikz Documentation}
+    \end{itemize}
+  \end{block}
+
+% }}}
+\end{frame}
+
+\begin{frame}{Absolute Placement Using Tikz}
+% {{{
+
+  \begin{tikzpicture}[remember picture, overlay]
+
+    % this stretches the figure to fit, even if it isn't the right ratio.
+    % get rid of the adjustbox if you don't want to stretch it.
+    \node[inner sep=0pt, align=center, anchor=center, opacity=0.25] (C) at (current page.center) {
+      \adjustbox{max width=\paperwidth}{
+        \includegraphics[height=\paperheight]{figs/Tree_Group_Photo_2021-04-15.jpg}
+      }
+    };
+
+    \node[inner sep=0pt, text width=6cm, align=left, anchor=north west] (A) at ([yshift=-1.5cm, xshift=0.5cm] current page.north west) {
+      Tikz can also be used to do absolute placement of text and images.
+      You can even cover the whole page with an image.
+      You can also mix this with relative positioning.
+    };
+
+    \node[inner sep=0pt, align=center, anchor=center] (B) at (current page.center) {
+      \includegraphics[width=4cm]{figs/fig-placeholder.pdf}
+    };
+
+  \end{tikzpicture}
+
+% }}}
+\end{frame}
+
+\againframe<3>{outline}
+
+\begin{frame}[plain]
+% {{{
+
+  Here is a plain frame with no title and no slide number.
+
+% }}}
+\end{frame}
+
+\begin{frame}[t]{Movies}
+% {{{
+
+  \centering
+  \begin{tikzpicture}
+
+    \node[inner sep=0pt, align=center] (video) {
+
+      \movie[width=7cm, poster, autostart, loop, showcontrols] {
+        \includegraphics[width=7cm]{vids/example_video_firstframe.png}}
+        {vids/example_video.mp4}
+
+    };
+
+    \node[align=center, text width=0.45\textwidth, right = 0.5 of video] (note)
+    {
+      \begin{block}{Using the multimedia package}
+        We can include movies in the pdf using the multimedia package!
+        A movie needs two things stored in the \texttt{vids} directory:
+        \begin{itemize}
+        \item A figure for the first frame
+        \item A movie in \texttt{.avi} or \texttt{.mp4} format
+        \end{itemize}
+        These movies are not embedded in the pdf, but the relative reference is preserved.
+        As such, \texttt{vids} \emph{needs to be moved with the pdf} (this is why I keep them in a separate directory).
+      \end{block}
+    };
+
+  \end{tikzpicture}
+
+% }}}
 \end{frame}
 
 \begin{frame}[t]{Acknowledgements}
@@ -847,37 +531,23 @@
   \begin{columns}[T]
 
     \column{0.52\textwidth}
-
       \centering
       \begin{tikzpicture}
 
-        \tikzstyle{box} = [
-          align=center, 
-          fill=white, 
-          rounded corners=0.2cm, 
-          opacity=0.5, 
-          inner sep=2pt,
-          text opacity=1
-        ]
+        \node[text width=\columnwidth, align=center, inner sep=0pt] (A) {
+          \includegraphics[width=\textwidth]{figs/Tree_Group_Photo_2021-04-15.jpg}
+        }; 
 
-        \node[inner sep=0pt, align=center, text width=\textwidth] (group) {
-          \includegraphics[width=\textwidth, trim=400 0 700 200, clip]{figs/group_photo_20190408_170730.jpg}
+        \node[text width=1cm, align=center, fill=white, rounded corners=0.2cm, 
+              opacity=0.5, text opacity=1, 
+              above right = 2.5 and 4.2 of A.south west, anchor=south west] (B) {
+          \small{}Dakota Banks\par
         };
 
-        \node[box, text width=1.1cm, below right = -0.4 and 2.25 of group.north, anchor=north] {
-          \small{}Dakota Banks\par{}
-        };
-
-        \node[box, text width=1.2cm, below right = -0.4 and 0.85 of group.north, anchor=north] {
-          \small{}Rami Alhasan\par{}
-        };
-
-        \node[box, text width=7.0cm, above= 0.1 of group.south, anchor=south] {
-          \small{}Sion Jung and Tanner Wilcoxson (not shown)\par{}
-        };
-
-        \node[inner sep=0pt, align=center, below=0.5 of group ] (byu) { 
-          \includegraphics[width=2.55cm]{./figs/BYU_IM26b.pdf}
+        \node[text width=1.20cm, align=center, fill=white, rounded corners=0.2cm, 
+              draw=lightorange, thick, opacity=0.5, text opacity=1,
+              above right = 2.5 and 1.2 of A.south west, anchor=south west] (C) {
+          \small{}Rami Alhasan\par
         };
 
       \end{tikzpicture}
@@ -886,145 +556,40 @@
       \vspace{-8pt}
       {\small
       \begin{itemize}
-        \item Prof. Glenn Fredrickson (UCSB)
+        \item {\color{lightorange}Prof. Glenn Fredrickson (UCSB)}
         \item Prof. Hector Ceniceros (UCSB)
-        \item Dr. Kris Delaney (UCSB)
+        \item {\color{lightorange}Dr. Kris Delaney (UCSB)}
         \item Dr. Tatsuhiro Iwama (Asahi Kasei)
-        \item Dr. Jeffrey Weinhold (Dow)
-        \item Dr. Mukul Tikekar (UCSB, DSM)
-        \item Jan Garcia (UCSB)
-        \item Lucas Francisco dos Santos (UEM)
-        \item Joshua Lee (UCSB)
+        \item {\color{lightorange}Jan Garcia (UCSB)}
       \end{itemize}
       }
 
   \end{columns}
+  \vspace{12pt}
+  \begin{center}
+  \begin{tikzpicture}
+
+    \node[inner sep=0pt, align=center ] (A)
+    { 
+      \includegraphics[width=2.55cm]{./figs/BYU_IM26b.pdf}
+    };
+
+    \node[inner sep=0pt, align=center, anchor=center, right=9 pt of A.east] (B)
+    { 
+      \includegraphics[width=2.05cm]{./figs/ACS-PRF_logo.jpg}
+    };
+    \node[inner sep=0pt, align=center, text width=3cm, right= 3 pt of B.east] (C) { 
+      BYU ORC \\[2pt]
+      \includegraphics[width=2.05cm]{./figs/BYU_ORC_chassis.jpg}
+    };
+
+  \end{tikzpicture}
+  \end{center}
+
+
 
 %% }}}
 \end{frame}
 
-%\begin{frame}[c]{Summary and conclusions}
-%%% {{{
-%
-%  \vspace{0.5cm}
-%  \centering
-%  \makebox[\textwidth][c]{
-%  \begin{tikzpicture}
-%    
-%      \node[align=center, text width=4.9cm] (text1) {%
-%        Mixing-induced formation of bijels can be studied using PFPD.
-%      };
-%
-%      \node[align=center, text width=4.6cm, below=0.25 of text1] (compspace) {%
-%        \includegraphics[width=\textwidth]{figs/Tanaka2000_fig3.png}
-%        {\tiny{}Tanaka and Araki.\ Phys.\ Rev.\ Lett.\ 2000.\par
-%        Furukawa et al.\ Soft Matter.\ 2018.\par}
-%      };
-%
-%      \node[align=center, text width=4.9cm, right=0.05cm of text1] (text2) {%
-%        Bijel coarsening mirrors bulk coarsening and then arrests phase separation.
-%      };
-%
-%      \node[align=center, text width=4.6cm, below=0.25 of text2] (morphology) {%
-%        \includegraphics[width=\textwidth]{figs/Hbijels_00900.png}
-%      };
-%
-%      \node[align=center, text width=4.6cm, right=0.05cm of text2] (text3) {%
-%        Droplet size and shape affects NIPS kinetics.
-%      };
-%
-%      \node[align=center, text width=3.8cm, below=0.50 of text3, inner sep=0pt] (droplets) {%
-%        \includegraphics[width=\textwidth]{figs/bigcircle_2-5-3_cropped_frame00246_rounded.png}
-%      };
-%
-%  \end{tikzpicture}
-%  }
-%
-%  \begin{center}
-%    {\small
-%    Alhasan et al.\ \emph{Coming in 2020}
-%    }
-%  \end{center}
-%
-%%% }}}
-%\end{frame}
-%
-%\begin{frame}[t]{Acknowledgements}
-%%% {{{
-%
-%  \begin{columns}[T]
-%
-%    \column{0.52\textwidth}
-%      \centering
-%      \includegraphics[width=\textwidth, trim=400 0 700 200, clip]{figs/group_photo_20190408_170730.jpg}
-%
-%    \column{0.48\textwidth}
-%      \vspace{-8pt}
-%      {\small
-%      \begin{itemize}
-%        \item {\color{lightorange}Prof. Glenn Fredrickson (UCSB)}
-%        \item Prof. Hector Ceniceros (UCSB)
-%        \item {\color{lightorange}Dr. Kris Delaney (UCSB)}
-%        \item Dr. Tatsuhiro Iwama (Asahi Kasei)
-%        \item Dr. Jeffrey Weinhold (Dow)
-%        \item {\color{lightorange}Dr. Mukul Tikekar (UCSB, DSM)}
-%        \item {\color{lightorange}Jan Garcia (UCSB)}
-%        \item Lucas Francisco dos Santos (UEM)
-%        \item Joshua Lee (UCSB)
-%      \end{itemize}
-%      }
-%
-%  \end{columns}
-%  \vspace{12pt}
-%  \begin{center}
-%  \begin{tikzpicture}
-%
-%    \node[inner sep=0pt, align=center ] (ak)
-%    { 
-%      \includegraphics[width=2.55cm]{./figs/AsahiKASEI_logo.pdf}
-%    };
-%
-%    \node[inner sep=0pt, align=center, anchor=center, right=9 pt of ak.east] (dow)
-%    { 
-%      \includegraphics[width=2.55cm]{./figs/Dow_logo.jpg}
-%    };
-%
-%    \node[inner sep=0pt, align=center, right=12pt of dow.east] (cnsi)
-%    { 
-%      \includegraphics[width=2.55cm]{./figs/CNSI_logo.jpg}
-%    };
-%
-%    \node[inner sep=0pt, align=center, right=9pt of cnsi.east ] (byu)
-%    { 
-%      \includegraphics[width=2.55cm]{./figs/BYU_IM26b.pdf}
-%    };
-%
-%  \end{tikzpicture}
-%  \end{center}
-%
-%  \begin{tikzpicture}[remember picture, overlay]
-%    %\draw[color=lightorange, line width=1pt] (2.90,6.45) circle [radius=0.5cm];
-%    \node[text width=1cm, align=center, fill=white, rounded corners=0.2cm, 
-%          opacity=0.5, text opacity=1] at (2.90, 5.55) {\small{}Caden Wilson\par{}};
-%
-%    %\draw[color=lightorange, line width=1pt] (4.84,6.90) circle [radius=0.5cm];
-%    \node[text width=0.8cm, align=center, fill=white, rounded corners=0.2cm, 
-%          opacity=0.5, text opacity=1] at (4.80, 6.00) {\small{}Tim Scott\par{}};
-%
-%    %\draw[color=lightorange, line width=1pt] (5.50,7.30) circle [radius=0.5cm];
-%    \node[text width=1cm, align=center, fill=white, rounded corners=0.2cm, 
-%          opacity=0.5, text opacity=1] at (5.60, 8.20) {\small{}Dakota Banks\par{}};
-%
-%    %\draw[color=lightorange, line width=1pt] (4.20,7.30) circle [radius=0.5cm];
-%    \node[text width=1.20cm, align=center, fill=white, rounded corners=0.2cm, draw=lightorange, thick,
-%          opacity=0.5, text opacity=1] at (4.20, 8.10) {\small{}Rami Alhasan\par{}};
-%
-%    \node[text width=4.7cm, align=center, fill=white, rounded corners=0.2cm, inner sep=2pt,
-%          opacity=0.5, text opacity=1] at (4.45, 3.25) {\small{}Tanner Wilcoxson (not shown)\par{}};
-%  \end{tikzpicture}
-%
-%%% }}}
-%\end{frame}
-%
 \end{document}
 
